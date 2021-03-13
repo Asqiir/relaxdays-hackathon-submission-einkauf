@@ -89,8 +89,8 @@ def searchLieferant():
 
 @get('/purchasesBetween')
 def purchasesBetween():
-	x = request.query['x'][1:-1]
-	y = request.query['y'][1:-1]
+	x = request.query['x']
+	y = request.query['y']
 
 	x_en = convert_to_en_format(x)
 	y_en = convert_to_en_format(y)
