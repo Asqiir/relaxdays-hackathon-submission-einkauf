@@ -11,6 +11,12 @@ paths:
       summary: add a new purchase
       consumes:
         - application/json
+      parameters:
+        - in: body
+          name: purchase
+          description: the purchase to add
+          schema: 
+            $ref: '#/definitions/Purchase'
       responses:
         200:
           description: OK
@@ -21,11 +27,56 @@ paths:
         - application/json
       responses:
         '200':    # status code
-          description: A JSON array of user names
+          description: OK
   /purchasesForArticle:
     get:
       summary: Returns a list of the purchases that bought article with given articleID
+      parameters:
+        - in: query
+          name: x
+          type: integer
+          description: the articleID for which any purchase buying that article will be returned
       responses:
         '200':
           description: OK
+  /searchLieferant:
+    get:
+      summary: returns a list of lieferanten that have a levenshtein-distance to the search word of at most 10
+      parameters:
+        - in: query
+          name: x
+          type: string
+          description: the search word
+      responses:
+        '200':
+          description: OK
+  /purchasesBetween:
+    get:
+      summary: returs a list of purchases that were done between the 2 given dates
+      parameters:
+        - in: query
+          name: x
+          type: string
+          format: date
+        - in: query
+          name: y
+          type: string
+          format: date
+      responses:
+        '200':
+          description: OK
+definitions:
+  Purchase:
+    type: object
+    required:
+      - lieferant
+      - articleID
+      - menge
+    properties:
+      lieferant:
+        type: string
+      articleID: 
+        type: integer
+      menge:
+        type: integer
   
