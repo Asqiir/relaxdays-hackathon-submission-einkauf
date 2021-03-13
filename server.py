@@ -5,10 +5,13 @@ from bottle import request, response, run, post, get, put, delete, route
 import json
 import yaml
 import datetime
+from Levenshtein import distance
+
 
 
 def convert_to_en_format(x): #assumes %d.%m.%Y %H:%M:%S input, returns %Y.%m.%d %H:%M:%S output
 	return x[6:10] + '-' + x[3:5] + '-' + x[0:2] + ' ' + x[11:19]
+
 
 class Verwalter:
 	data = []
@@ -38,6 +41,11 @@ class Verwalter:
 	def getByDate(self, after=None, before=None):
 		return list(filter(lambda k:(after==None or after<=k['time']) and (before==None or before>=k['time']), self.data))
 
+	def getLieferanten(self):
+		l = set()
+		for entry in self.data:
+			l.add(entry['lieferant'])
+		return l
 
 verwalter=Verwalter()
 
@@ -57,6 +65,27 @@ def purchaseForArticle():
 	articleID = int(request.query['x'])
 	response.headers['Content-Type'] = 'application/json'
 	return json.dumps(verwalter.getAll(article_id=articleID))
+
+@get('/searchLieferant')
+def searchLieferant():
+	search = request.query['x']
+	response.headers['Content-Type'] = 'application/json'
+	lieferanten = verwalter.getLieferanten()
+	levenshtein = dict()
+
+	#calc once
+	for l in lieferanten:
+		levenshtein[l]=distance(search,l)
+
+	#filter
+	levenshtein = {k: v for (k, v) in levenshtein.items() if v<=10}
+
+	#sort
+	lieferanten = sorted(levenshtein.keys(), key=lambda k:levenshtein[k])
+
+
+	return json.dumps(lieferanten)
+
 
 @get('/purchasesBetween')
 def purchasesBetween():

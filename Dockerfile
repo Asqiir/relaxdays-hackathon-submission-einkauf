@@ -3,5 +3,6 @@ WORKDIR /app
 ADD . /app
 RUN python3 -m pip install bottle
 RUN python3 -m pip install pyyaml
+RUN python3 -m pip install python-levenshtein
 EXPOSE 8080
 CMD ["python3","server.py"]

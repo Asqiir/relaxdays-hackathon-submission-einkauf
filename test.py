@@ -50,3 +50,18 @@ with open('data.json','r') as file:
 	if not compare_lists(data, []):
 		print(data)
 		print('GET ALL 3 wrong')
+
+r1 = requests.get("http://0.0.0.0:8080/searchLieferant", params={'x':'x'})
+o7 = {'lieferant':'xsfasdfagdsgasdgdgas','articleID':7,'menge':10}
+requests.post("http://0.0.0.0:8080/purchase", data=json.dumps(o7))
+r2 = requests.get("http://0.0.0.0:8080/searchLieferant", params={'x':'xz'})
+
+with open('data.json','r') as file:
+	data = r1.json()
+	if not data==['x','y']:
+		print(data)
+		print('LEVENSHTEIN 1 wrong')
+	data = r2.json()
+	if not data== ['x','y']:
+		print(data)
+		print('LEVENSHTEIN 2 wrong')
