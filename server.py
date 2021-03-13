@@ -1,8 +1,27 @@
 #docker build -t einkauf .
 #docker run -p 8080:8080 einkauf
 
-from bottle import request, response, run, post, get, put, delete
+from bottle import request, response, run, post, get, put, delete, route
 import json
+#import bottle 
+#from bottle_swagger import SwaggerPlugin
+
+import yaml
+
+#from bottle_swagger import swagger
+#from bottle_swagger import SwaggerPlugin
+
+#print(bottle_swagger.__file__)
+
+#app = bottle.app()
+
+#@app.route("/spec")
+#def spec():
+#	print(bottle_swagger.__file__)
+#	results = bottle_swagger.swagger(app)
+#	return results
+
+
 
 class Verwalter:
 	data = []
@@ -43,6 +62,19 @@ def purchaseForArticle():
 	articleID = int(request.query['x'])
 	response.headers['Content-Type'] = 'application/json'
 	return json.dumps(verwalter.getAll(article_id=articleID))
+
+
+global swagger_json
+swagger_json = None
+with open('swagger.yaml') as file:
+	swagger_json = yaml.safe_load(file)
+	#bottle.install(SwaggerPlugin(swagger_def))
+
+@route('/swagger')
+def swagger():
+	return swagger_json
+
+
 
 
 run(host='0.0.0.0', port=8080)
