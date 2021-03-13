@@ -3,24 +3,7 @@
 
 from bottle import request, response, run, post, get, put, delete, route
 import json
-#import bottle 
-#from bottle_swagger import SwaggerPlugin
-
 import yaml
-
-#from bottle_swagger import swagger
-#from bottle_swagger import SwaggerPlugin
-
-#print(bottle_swagger.__file__)
-
-#app = bottle.app()
-
-#@app.route("/spec")
-#def spec():
-#	print(bottle_swagger.__file__)
-#	results = bottle_swagger.swagger(app)
-#	return results
-
 
 
 class Verwalter:

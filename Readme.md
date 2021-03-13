@@ -16,3 +16,7 @@ cd relaxdays-hackathon-submission-einkauf
 docker build -t einkauf .
 docker run -p 8080:8080 einkauf
 ```
+
+## swagger
+
+is at `/swagger`.
