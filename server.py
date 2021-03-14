@@ -1,17 +1,27 @@
 #docker build -t einkauf .
 #docker run -p 8080:8080 einkauf
 
-from bottle import request, response, run, post, get, put, delete, route
+from bottle import request, response, run, post, get, put, delete, route, static_file
 import json
 import yaml
+import pathlib
 import datetime
 from Levenshtein import distance
+import matplotlib.pyplot as plt
 
 
 
 def convert_to_en_format(x): #assumes %d.%m.%Y %H:%M:%S input, returns %Y.%m.%d %H:%M:%S output
 	return x[6:10] + '-' + x[3:5] + '-' + x[0:2] + ' ' + x[11:19]
 
+def write_plt(file, x, y):
+	fig = plt.figure()
+	rect = fig.patch
+
+	plt.plot(x, y)
+	#plt.set_major_formatter(ticker.FormatStrFormatter('%1.0f€'))
+	plt.savefig(file)
+	plt.close(fig)
 
 class Verwalter:
 	data = []
@@ -97,6 +107,23 @@ def purchasesBetween():
 
 	return json.dumps(verwalter.getByDate(after=x_en,before=y_en))
 
+@get('/plot')
+def plot():
+	x_query = int(request.query['x'])
+
+	x = []
+	y = []
+
+	values = verwalter.getAll(article_id=x_query)
+	for value in values:
+		x.append(value['time'])
+		y.append(value['preis'])
+
+	write_plt('image.png',x,y)
+
+	#return 'done'
+	current=pathlib.Path(__file__).parent.absolute()
+	return static_file('image.png', root=current)
 
 global swagger_json
 swagger_json = None

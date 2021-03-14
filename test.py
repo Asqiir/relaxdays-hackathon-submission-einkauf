@@ -9,10 +9,10 @@ def nodate(x):
 		del entry['time']
 	return x
 
-o1 = {'lieferant':'x','articleID':3,'menge':10}
-o2 = {'lieferant':'x','articleID':3,'menge':10}
-o3 = {'lieferant':'y','articleID':3,'menge':10}
-o4 = {'lieferant':'x','articleID':7,'menge':10}
+o1 = {'lieferant':'x','articleID':3,'menge':10,'preis':10.02}
+o2 = {'lieferant':'x','articleID':3,'menge':10,'preis':10.02}
+o3 = {'lieferant':'y','articleID':3,'menge':10,'preis':10.08}
+o4 = {'lieferant':'x','articleID':7,'menge':10,'preis':10.02}
 
 requests.post("http://0.0.0.0:8080/purchase", data=json.dumps(o1))
 requests.post("http://0.0.0.0:8080/purchase", data=json.dumps(o2))
@@ -65,3 +65,4 @@ with open('data.json','r') as file:
 	if not data== ['x','y']:
 		print(data)
 		print('LEVENSHTEIN 2 wrong')
+
