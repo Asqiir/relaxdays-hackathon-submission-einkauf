@@ -57,6 +57,18 @@ class Verwalter:
 			l.add(entry['lieferant'])
 		return l
 
+	def getFilteredByLieferantSortedByMostRecentPrice(self, lieferant):
+		alle_artikel_von_lieferant = [artikel for artikel in verwalter.getAll() if artikel['lieferant']==lieferant]
+		prices = dict()
+		for entry in alle_artikel_von_lieferant:
+			if not entry['articleID'] in prices:
+				prices[entry['articleID']] = entry
+			elif prices[entry['articleID']]['time']<entry['time']:
+				prices[entry['articleID']] = entry
+
+		return sorted(prices.values(), key=lambda k:k['preis']/k['menge'])
+
+
 verwalter=Verwalter()
 
 @get('/purchases')
@@ -105,7 +117,16 @@ def purchasesBetween():
 	x_en = convert_to_en_format(x)
 	y_en = convert_to_en_format(y)
 
+	response.headers['Content-Type'] = 'application/json'
 	return json.dumps(verwalter.getByDate(after=x_en,before=y_en))
+
+@get('/articlesForLieferant')
+def articles_for_lieferant():
+	x = request.query['x']
+	response.headers['Content-Type'] = 'application/json'
+	alle_artikel = verwalter.getFilteredByLieferantSortedByMostRecentPrice(x)
+	nur_ids = [einkauf['articleID'] for einkauf in alle_artikel]
+	return json.dumps(nur_ids)
 
 @get('/plot')
 def plot():

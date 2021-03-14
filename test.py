@@ -66,3 +66,21 @@ with open('data.json','r') as file:
 		print(data)
 		print('LEVENSHTEIN 2 wrong')
 
+
+n1 = {'lieferant':'neu','articleID':3,'menge':10,'preis':10}
+n2 = {'lieferant':'neu','articleID':3,'menge':5,'preis':10}
+
+
+m1 = {'lieferant':'neu','articleID':4,'menge':10,'preis':70}
+
+
+requests.post("http://0.0.0.0:8080/purchase", data=json.dumps(n1))
+requests.post("http://0.0.0.0:8080/purchase", data=json.dumps(m1))
+requests.post("http://0.0.0.0:8080/purchase", data=json.dumps(n2))
+
+r = requests.get("http://0.0.0.0:8080/articlesForLieferant", params={'x':'neu'})
+
+data = r.json()
+if not data==[3,4]:
+	print(data)
+	print('wrong GET ARTICLE FOR LIEFERANT')
